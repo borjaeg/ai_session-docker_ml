@@ -1,0 +1,21 @@
+version: "3.7"
+
+services:
+
+  eden_lab:
+    image: jupyter/tensorflow-notebook
+    ports:
+      - "8888:8888"
+    volumes:
+      - "./notebooks:/home/jovyan/projectDir"
+    environment:
+      - "JUPYTER_ENABLE_LAB=yes"
+
+  weed_classifier_service:
+    image: eden_library:cotton_model
+    build:
+      context: .
+      dockerfile: Dockerfile
+    deploy:
+      replicas: 4
+      endpoint_mode: vip
