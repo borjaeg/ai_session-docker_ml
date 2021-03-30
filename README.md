@@ -84,8 +84,8 @@ cd demo_2
 docker-compose up --build eden_lab
 ```
 #### Training and export a deep model (localhost:8888)
-<img src="https://user-images.githubusercontent.com/2207826/112990271-28ac3c00-9166-11eb-9591-7a882378e497.png" width="200px"></br>
-<img src="https://user-images.githubusercontent.com/2207826/112990330-382b8500-9166-11eb-8e4b-9622b5740b89.png" width="200px">
+<img src="https://user-images.githubusercontent.com/2207826/112990271-28ac3c00-9166-11eb-9591-7a882378e497.png" width="400px"></br>
+<img src="https://user-images.githubusercontent.com/2207826/112990330-382b8500-9166-11eb-8e4b-9622b5740b89.png" width="400px">
 
 ```shell
 docker-compose build weed_classifier_service
