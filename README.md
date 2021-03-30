@@ -45,7 +45,10 @@ $ sudo systemctl restart docker
 #### Run Nvidia-SMI
 ```shell
 docker run --gpus all nvidia/cuda:10.0-base nvidia-smi
-#### Run Python VM
+```
+
+#### Run Python VM and Tensorflow with GPU
+```shell
 docker run -it --rm --gpus all tensorflow/tensorflow:latest-gpu python
 ```
 
@@ -55,6 +58,33 @@ tf.version.VERSION
 from tensorflow.python.client import device_lib  
 print(device_lib.list_local_devices())
 ```
-
-#### Run Jupyter notebook with Tensorflow Example
+#### Run Jupyter notebook with GPU Tensorflow Examples
+```shell
 docker run -it --rm --gpus all -p 8888:8888 tensorflow/tensorflow:latest-gpu-jupyter
+```
+
+#### Extend previous Image
+```shell
+cd demo_1
+docker build -t eden_library/laboratory:latest-gpu-jupyter .
+docker run -it --rm --gpus all -p 8888:8888 eden_library/laboratory:latest-gpu-jupyter
+```
+
+## Tutorial 2
+```shell
+cd demo_2
+docker-compose up --build eden_lab
+```
+
+```shell
+docker-compose build weed_classifier_service
+docker swarm init
+docker stack deploy -c docker-compose.yml tf
+
+docker ps
+docker service ls
+
+docker logs
+docker stack rm tf
+docker swarm leave --force
+```
