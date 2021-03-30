@@ -1,4 +1,4 @@
-# AI SESSION: From local notebooks to MLOps
+# AI SESSION: From local notebooks to MLOps with Docker
 ## Initial set-up
 #### Install Docker
 ```shell
