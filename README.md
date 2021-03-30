@@ -27,11 +27,11 @@ docker service ls
 
 ## Tutorial 1
 #### Install NVIDIA Support
-$ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-$ curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+$ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)  
+$ curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -  
 $ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
 
-$ sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
+$ sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit  
 $ sudo systemctl restart docker
 
 #### Run Nvidia-SMI
@@ -39,7 +39,9 @@ docker run --gpus all nvidia/cuda:10.0-base nvidia-smi
 #### Run Python VM
 docker run -it --rm --gpus all tensorflow/tensorflow:latest-gpu python
 
-import tensorflow as tf
-tf.version.VERSION
-from tensorflow.python.client import device_lib
+```python
+import tensorflow as tf  
+tf.version.VERSION  
+from tensorflow.python.client import device_lib  
 print(device_lib.list_local_devices())
+```
