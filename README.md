@@ -22,7 +22,7 @@ ssh user@server_ip
 ## Basic Commands
 #### Images
 ```shell
-docker image ls  
+docker image ls  # List available images
 docker image rm [image_id]  
 docker rmi --force [image_id]  
 docker images -f dangling=true  
