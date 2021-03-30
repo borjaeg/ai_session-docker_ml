@@ -1,7 +1,23 @@
+# AI SESSION: From local notebooks to MLOps
 ## Initial set-up
+#### Install Docker
+```shell
+sudo apt update
+sudo apt upgrade
+sudo apt install docker.io
+sudo docker --version
+sudo systemctl status docker
+sudo apt install docker-compose
+
+sudo usermod -aG sudo nameOfUser
+sudo usermod -aG docker nameOfUser
+```
+
 #### Create SSH Tunnel for Jupyter Notebooks
+```shell
 ssh -N -f -L localhost:8888:localhost:8888 user@server_ip
 ssh user@server_ip
+``` 
 
 ## Basic Commands
 #### Images
@@ -34,12 +50,12 @@ docker service ls
 ## Tutorial 1
 #### Install NVIDIA Support
 ```shell
-$ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)  
-$ curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -  
-$ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)  
+curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -  
+curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
 
-$ sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit  
-$ sudo systemctl restart docker
+sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit  
+sudo systemctl restart docker
 ```
 
 #### Run Nvidia-SMI
