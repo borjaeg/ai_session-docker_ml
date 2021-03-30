@@ -103,6 +103,7 @@ docker-compose up --build eden_lab
 <img src="https://user-images.githubusercontent.com/2207826/112990271-28ac3c00-9166-11eb-9591-7a882378e497.png" width="400px"></br>
 <img src="https://user-images.githubusercontent.com/2207826/112990330-382b8500-9166-11eb-8e4b-9622b5740b89.png" width="400px">
 
+#### Launch cluster and deploy trained model in the previous step
 ```shell
 docker-compose build weed_classifier_service
 docker swarm init
@@ -112,6 +113,10 @@ docker ps
 docker service ls
 
 docker logs
+```
+
+#### Launch cluster and deploy trained model in the previous step
+```shell
 docker stack rm tf
 docker swarm leave --force
 ```
