@@ -69,6 +69,14 @@ cd demo_1
 docker build -t eden_library/laboratory:latest-gpu-jupyter .
 docker run -it --rm --gpus all -p 8888:8888 eden_library/laboratory:latest-gpu-jupyter
 ```
+requirements.txt
+```text
+numpy==1.19.2
+matplotlib==2.2.2
+pandas==1.1.5
+scikit-learn==0.24.1
+tensorflow_datasets==4.2.0
+```
 
 ## Tutorial 2
 ```shell
