@@ -110,8 +110,8 @@ EXPOSE 8888
 
 ```shell
 cd demo_1
-docker build -t eden_library/laboratory:latest-gpu-jupyter .
-docker run -it --rm --gpus all -p 8888:8888 eden_library/laboratory:latest-gpu-jupyter
+docker build -t eden_library/laboratory:latest-gpu-jupyter . # Build the image 
+docker run -it --rm --gpus all -p 8888:8888 eden_library/laboratory:latest-gpu-jupyter # Run the container 
 ```
 
 **requirements.txt**
@@ -124,9 +124,34 @@ tensorflow_datasets==4.2.0
 ```
 
 ## Tutorial 2
+
+```yaml
+version: "3.7"
+
+services:
+
+  eden_lab:
+    image: jupyter/tensorflow-notebook
+    ports:
+      - "8888:8888"
+    volumes:
+      - "./notebooks:/home/jovyan/projectDir"
+    environment:
+      - "JUPYTER_ENABLE_LAB=yes"
+
+  weed_classifier_service:
+    image: eden_library:cotton_model
+    build:
+      context: .
+      dockerfile: Dockerfile
+    deploy:
+      replicas: 4
+      endpoint_mode: vip
+```
+
 ```shell
 cd demo_2
-docker-compose up --build eden_lab
+docker-compose up --build eden_lab # Build the image and run as a container. A Jupyter Lab will be launched.
 ```
 #### Training and export a deep model (localhost:8888)
 <img src="https://user-images.githubusercontent.com/2207826/112990271-28ac3c00-9166-11eb-9591-7a882378e497.png" width="400px"></br>
