@@ -174,3 +174,153 @@ docker logs # Check the port where the client simulator is listening
 docker stack rm tf # Create workers (tf is the name if the stack)
 docker swarm leave --force
 ```
+# AI Session: TensorBoard
+Presentation available at:
+- https://docs.google.com/presentation/d/1z01UvzbP9RDy1dtXs5AMRB0_eWZiMW91dFDpmmur4WE/edit?usp=sharing
+
+
+--- 
+## Demo 1
+--- 
+### Docker cleanup
+```
+sudo docker container ls -a
+sudo docker container stop XXX
+sudo docker system prune
+```
+
+### Run Docker container with TF-GPU, Jupyter, TensorBoard:
+`sudo docker run --runtime=nvidia -it --rm -p 8888:8888 -p 6006:6006 tensorflow/tensorflow:2.4.1-gpu-jupyter`
+
+### Load the TensorBoard notebook extension 
+```
+%load_ext tensorboard
+%tensorboard --logdir logs --bind_all
+```
+```
+from tensorboard import notebook
+notebook.list() # View open TensorBoard instances
+notebook.display(port=6006, height=1000)
+```
+
+### Check GPU availability 
+```
+import tensorflow as tf
+print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
+```
+
+### Run TF without GPU on simple scalar task
+```
+import tensorflow as tf
+from tensorflow import keras
+from datetime import datetime
+
+import numpy as np
+data_size = 1000
+train_pct = 0.8
+
+train_size = int(data_size * train_pct)
+
+x = np.linspace(-1, 1, data_size)
+np.random.shuffle(x)
+y = 0.5 * x + 2 + np.random.normal(0, 0.05, (data_size, ))
+
+x_train, y_train = x[:train_size], y[:train_size]
+x_test, y_test = x[train_size:], y[train_size:]
+
+logdir = "logs/no_gpu/" + datetime.now().strftime("%Y%m%d-%H%M%S")
+tensorboard_callback = keras.callbacks.TensorBoard(log_dir=logdir)
+
+model = keras.models.Sequential([
+    keras.layers.Dense(16, input_dim=1),
+    keras.layers.Dense(1),
+])
+
+model.compile(
+    loss='mse', # keras.losses.mean_squared_error
+    optimizer=keras.optimizers.SGD(lr=0.2),
+)
+
+print("Training ... With default parameters, this takes less than 10 seconds.")
+training_history = model.fit(
+    x_train, # input
+    y_train, # output
+    batch_size=train_size,
+    verbose=0, # Suppress chatty output; use Tensorboard instead
+    epochs=40,
+    validation_data=(x_test, y_test),
+    callbacks=[tensorboard_callback],
+)
+
+print("Average test loss: ", np.average(training_history.history['loss']))
+
+print(model.predict([60, 25, 2]))
+```
+
+### Run TF with GPU on MNIST
+```
+import tensorflow as tf
+import datetime, os
+
+fashion_mnist = tf.keras.datasets.fashion_mnist
+
+(x_train, y_train),(x_test, y_test) = fashion_mnist.load_data()
+x_train, x_test = x_train / 255.0, x_test / 255.0
+
+def create_model():
+    return tf.keras.models.Sequential([
+    tf.keras.layers.Flatten(input_shape=(28, 28)),
+    tf.keras.layers.Dense(512, activation='relu'),
+    tf.keras.layers.Dropout(0.2),
+    tf.keras.layers.Dense(10, activation='softmax')
+    ])
+
+def train_model():
+
+    model = create_model()
+    model.compile(optimizer='adam',
+                loss='sparse_categorical_crossentropy',
+                metrics=['accuracy'])
+
+    logdir = os.path.join("logs/gpu", datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
+    tensorboard_callback = tf.keras.callbacks.TensorBoard(logdir, histogram_freq=1)
+
+    model.fit(x=x_train, 
+            y=y_train, 
+            epochs=20, 
+            validation_data=(x_test, y_test), 
+            callbacks=[tensorboard_callback])
+
+train_model()
+```
+
+
+--- 
+## Demo 2
+--- 
+### Initiate TensorBoard
+A level above `logs` folder:
+`tensorboard --logdir=logs`
+Open `http://localhost:6006/` in browser
+
+
+### Run PyTorch script
+In folder of `train_tomato.py`:
+```
+conda activate eden_pytorch
+python train.py
+```
+
+### Check GPU performance
+`nvidia-smi`
+
+
+---
+## Links
+---
+- https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#installing-on-ubuntu-and-debian
+- https://www.tensorflow.org/install/docker#gpu_support
+- https://www.tensorflow.org/tensorboard/tensorboard_in_notebooks
+- https://www.tensorflow.org/tensorboard/scalars_and_keras
+- https://www.machinecurve.com/index.php/2019/11/13/how-to-use-tensorboard-with-keras/
+- https://pytorch.org/docs/stable/tensorboard.html
